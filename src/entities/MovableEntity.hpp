@@ -1,6 +1,12 @@
 #ifndef MovableEntity_hpp
 #define MovableEntity_hpp
 
+#ifndef GRAVITY
+#define H_MAX 16								//hauteur max du saut (en px)
+#define T_H_MAX 0.24f							//temps pour atteindre hmax (en s)
+#define GRAVITY  (2*H_MAX)/(T_H_MAX*T_H_MAX)
+#endif
+
 #include "SDL2/SDL.h"
 
 #include "Entity.hpp"

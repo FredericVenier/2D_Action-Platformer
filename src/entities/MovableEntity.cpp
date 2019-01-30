@@ -13,7 +13,7 @@ void MovableEntity::update(int delta, InputHandler*& inputHandler, bool falling)
 	if (falling) fallingTime += delta;
 	else fallingTime = 0;
 
-	yVelocity = 355.55f*fallingTime/1000 - speedY; //gravity
+	yVelocity = GRAVITY*fallingTime/1000 - speedY; //gravity
 
 	float oldX(x);
 	float oldY(y);

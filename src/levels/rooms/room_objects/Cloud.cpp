@@ -24,8 +24,8 @@ void Cloud::update(int delta) {
 	}
 }
 
-void Cloud::render(SDL_Renderer*& renderer, float addToX, int width, int height) {
-	sprite->render(renderer, x+addToX, y, width, height);
+void Cloud::render(SDL_Renderer*& renderer, int width, int height) {
+	sprite->render(renderer, x, y, width, height);
 }
 
 float Cloud::getX() const {
@@ -50,4 +50,8 @@ void Cloud::setSpeed(float s) {
 
 void Cloud::setY(float newY) {
 	y = newY;
+}
+
+void Cloud::setX(float newX) {
+	x = newX;
 }

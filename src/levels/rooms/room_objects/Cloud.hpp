@@ -14,7 +14,7 @@ public:
 	void init();
 
 	void update(int delta);
-	void render(SDL_Renderer*& renderer, float addToX, int width, int height);
+	void render(SDL_Renderer*& renderer, int width, int height);
 
 	float getX() const;
 	float getY() const;
@@ -23,6 +23,7 @@ public:
 
 	void setSpeed(float s);
 	void setY(float y);
+	void setX(float x);
 
 private:
 	Sprite* sprite;

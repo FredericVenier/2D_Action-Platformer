@@ -23,18 +23,24 @@ private:
 	enum State
 	{
 		IDLE,
-		RUN_LEFT,
-		RUN_RIGHT,
+		RUN,
 		SQUAT,
-		JUMP_LEFT,
-		JUMP_RIGHT,
+		JUMP,
 		ATTACK_ONE,
 		ATTACK_TWO,
 		ATTACK_THREE,
-		EOE //End Of Enumeration
+		STATE_EOE //End Of Enumeration
+	};
+
+	enum Facing
+	{
+		LEFT,
+		RIGHT,
+		FACING_EOE //En Of Enumeration
 	};
 
 	State state;
+	Facing facing;
 
 	bool right;
 	bool left;
@@ -48,7 +54,7 @@ private:
 	int cooldown;
 	int combo;
 
-	Animation* animations[EOE];
+	Animation* animations[7][3];
 
 	void updateInput(InputHandler*& inputHandler);
 	void updateState(bool updateLeft, bool updateRight);
@@ -56,6 +62,7 @@ private:
 	void moveX(bool updateLeft, bool updateRight);
 
 	void setState(State newState);
+	void setFacing(Facing newFacing);
 
 	void doObjectsCollision();
 };

@@ -1,24 +1,38 @@
 #include "Player.hpp"
 
-Player::Player(SDL_Renderer*& renderer, Level*& level) : MovableEntity(1.0f, 0.0f, 5, 29, 0.08f, level), state(IDLE),
+Player::Player(SDL_Renderer*& renderer, Level*& level) : MovableEntity(1.0f, 0.0f, 5, 29, 0.08f, level), state(IDLE), facing(RIGHT),
 right(false), left(false), rightLeft(false), up(false), down(false), attack(false), cooldown(0), combo(0) {
 
 	char* path = (char*)"res/images/spritesheet_main.png";
-	animations[IDLE] = new Animation(path, 1, 5, 250, 35, 35, renderer);
-	animations[RUN_RIGHT] = new Animation(path, 2, 9, 100, 35, 35, renderer);
-	animations[RUN_LEFT] = new Animation(path, 3, 9, 100, 35, 35, renderer);
-	animations[JUMP_RIGHT] = new BlockedAnimation(path, 4, 2, 75, 35, 35, renderer);
-	animations[JUMP_LEFT] = new BlockedAnimation(path, 5, 2, 75, 35, 35, renderer);
-	animations[SQUAT] = new Animation(path, 6, 5, 300, 35, 35, renderer);
-	animations[ATTACK_ONE] = new Animation(path, 7, 6, 100, 70, 35, renderer);
-	animations[ATTACK_TWO] = new Animation(path, 8, 6, 100, 70, 35, renderer);
-	animations[ATTACK_THREE] = new Animation(path, 7, 6, 100, 70, 35, renderer);
+	animations[IDLE][LEFT] = new Animation(path, 1, 5, 250, 35, 35, renderer);
+	animations[IDLE][RIGHT] = new Animation(path, 1, 5, 250, 35, 35, renderer);
+	animations[RUN][LEFT] = new Animation(path, 3, 9, 100, 35, 35, renderer);
+	animations[RUN][RIGHT] = new Animation(path, 2, 9, 100, 35, 35, renderer);
+	animations[JUMP][LEFT] = new BlockedAnimation(path, 5, 2, 75, 35, 35, renderer);
+	animations[JUMP][RIGHT] = new BlockedAnimation(path, 4, 2, 75, 35, 35, renderer);
+	animations[SQUAT][LEFT] = new Animation(path, 6, 5, 300, 35, 35, renderer);
+	animations[SQUAT][RIGHT] = new Animation(path, 6, 5, 300, 35, 35, renderer);
+	animations[ATTACK_ONE][LEFT] = new Animation(path, 7, 6, 100, 70, 35, renderer);
+	animations[ATTACK_TWO][LEFT] = new Animation(path, 8, 6, 100, 70, 35, renderer);
+	animations[ATTACK_THREE][LEFT] = new Animation(path, 7, 6, 100, 70, 35, renderer);
+	animations[ATTACK_ONE][RIGHT] = new Animation(path, 7, 6, 100, 70, 35, renderer);
+	animations[ATTACK_TWO][RIGHT] = new Animation(path, 8, 6, 100, 70, 35, renderer);
+	animations[ATTACK_THREE][RIGHT] = new Animation(path, 7, 6, 100, 70, 35, renderer);
+	// animations[ATTACK_ONE][LEFT] = new MirrorAnimation(animations[ATTACK_ONE][RIGHT]);
+	// animations[ATTACK_TWO][LEFT] = new MirrorAnimation(animations[ATTACK_TWO][RIGHT]);
+	// animations[ATTACK_THREE][LEFT] = new MirrorAnimation(animations[ATTACK_THREE][RIGHT]);
 }
 
 Player::~Player() {
-	for(int i(0); i<EOE; i++) {
-		delete animations[i];
+	for(int i(0); i<7; i++) {
+		// std::cout << "test1" << std::endl;
+		//delete animations[i][1];
+		// std::cout << "test2" << std::endl;
+		//delete animations[i][0];
+		// std::cout << "test3" << std::endl;
 	}
+
+	std::cout << "test" << std::endl;
 }
 
 
@@ -39,13 +53,13 @@ void Player::update(int delta, InputHandler*& inputHandler) {
 		if(state == SQUAT) {
 			setHitBox(x, y+16, 6, 13); //quand on s'accroupit
 
-		} else if(state==JUMP_RIGHT || state==JUMP_LEFT) {
+		} else if(state == JUMP) {
 			if(oldState == SQUAT) setHitBox(x, y-16, 5, 26); //quand on saute alors qu'on est accroupit
 			else setHitBox(x, y, 5, 26); //si on saute et qu'on n'est pas accroupit
 
 		} else {
 			if(oldState == SQUAT) setHitBox(x, y-16, 5, 29); //si on etait accroupit et qu'on revient a la hitbox de base
-			else if(oldState==JUMP_LEFT || oldState==JUMP_RIGHT) setHitBox(x, y, 5, 29); //si on sautait et qu'on revient a la hitbox de base
+			else if(oldState == JUMP) setHitBox(x, y, 5, 29); //si on sautait et qu'on revient a la hitbox de base
 		}
 	}
 
@@ -53,18 +67,18 @@ void Player::update(int delta, InputHandler*& inputHandler) {
 	moveX(updateLeft, updateRight);
 
 	//on update la position avec collision des objets solides
-	MovableEntity::update(delta, inputHandler, state == JUMP_RIGHT || state == JUMP_LEFT);
+	MovableEntity::update(delta, inputHandler, state == JUMP);
 
 	//on effectue la collision sur les objets interactifs
 	doObjectsCollision();
 
 	//on update l'animation
-	animations[state]->update(delta);
+	animations[state][facing]->update(delta);
 }
 
 void Player::render(SDL_Renderer*& renderer, int width, int height) {
-	if(state==SQUAT) animations[state]->render(renderer, x-15, y-22, width, height);
-	else animations[state]->render(renderer, x-15, y-6, width, height);
+	if(state==SQUAT) animations[state][facing]->render(renderer, x-15, y-22, width, height);
+	else animations[state][facing]->render(renderer, x-15, y-6, width, height);
 
 	//printHitBox(renderer, width, height);
 }
@@ -98,10 +112,11 @@ void Player::updateInput(InputHandler*& inputHandler) {
 }
 
 void Player::updateState(bool updateLeft, bool updateRight) {
-	if(state!=JUMP_LEFT && state!=JUMP_RIGHT) { //si on est pas en plein saut on peut changer d'etat selon les touches activees
+	if(state!=JUMP) { //si on est pas en plein saut on peut changer d'etat selon les touches activees
 		if(!collidingGround) {
-			if (xVelocity<0) setState(JUMP_LEFT);
-			else setState(JUMP_RIGHT);
+			setState(JUMP);
+			if (xVelocity<0) setFacing(LEFT);
+			else setFacing(RIGHT);
 
 		} else if ((attack || (state==ATTACK_ONE && combo==1) || (state==ATTACK_TWO && combo==2)) && cooldown<=0 && state!=ATTACK_THREE) { //si on attaque
 			switch (combo) {
@@ -115,7 +130,7 @@ void Player::updateState(bool updateLeft, bool updateRight) {
 					break;
 				case 2:
 					setState(ATTACK_THREE);
-					cooldown = 600;
+					cooldown = 400;
 					break;
 				default:
 					break;
@@ -125,11 +140,9 @@ void Player::updateState(bool updateLeft, bool updateRight) {
 			if (attack && cooldown<=300) {
 				switch (state) {
 					case ATTACK_ONE:
-						std::cout << "combo1" << std::endl;
 						combo = 1;
 						break;
 					case ATTACK_TWO:
-						std::cout << "combo2" << std::endl;
 						combo = 2;
 						break;
 					default:
@@ -138,18 +151,25 @@ void Player::updateState(bool updateLeft, bool updateRight) {
 			}
 
 		} else if (up) { //si on saute
-			setSpeedY(106.66f); //on set la valeur de la vitesse a la vitesse de depart du saut
-			if (xVelocity<0) setState(JUMP_LEFT);
-			else setState(JUMP_RIGHT);
+			setSpeedY(sqrt(2*GRAVITY*16)); //on set la valeur de la vitesse a la vitesse de depart du saut = (2*g*h_max)^1/2
+			setState(JUMP);
+			if (xVelocity<0) setFacing(LEFT);
+			else setFacing(RIGHT);
 
 		} else if (down) { //si on s'accroupit
 			if (state!=SQUAT) setState(SQUAT);
 
 		} else if (updateLeft) { //si on cours vers la gauche
-			if (state!=RUN_LEFT) setState(RUN_LEFT);
+			if (state!=RUN || facing!=LEFT) { 
+				setState(RUN);
+				setFacing(LEFT);
+			}
 
 		} else if (updateRight) { //si on court vers la droite
-			if (state!=RUN_RIGHT) setState(RUN_RIGHT);
+			if (state!=RUN || facing!=RIGHT) { 
+				setState(RUN);
+				setFacing(RIGHT);
+			}
 
 		} else if (state != IDLE) { //sinon idle
 			setState(IDLE);
@@ -159,17 +179,25 @@ void Player::updateState(bool updateLeft, bool updateRight) {
 		if (attack && cooldown <= 0) setState(ATTACK_ONE);
 		else if(down) setState(SQUAT);
 		else if (up && xVelocity <= 0 && !updateRight) { //si on enchaine les sauts on repasse en etat saut sans gain de vitesse sur x
-			setState(JUMP_LEFT);
-			setSpeedY(106.66f);
+			setState(JUMP);
+			setFacing(LEFT);
+			setSpeedY(sqrt(2*GRAVITY*16));
 			setFallingTime(0);
 		}
 		else if (up && xVelocity > 0 && !updateLeft) {
-			setState(JUMP_RIGHT);
-			setSpeedY(106.66f);
+			setState(JUMP);
+			setFacing(RIGHT);
+			setSpeedY(sqrt(2*GRAVITY*16));
 			setFallingTime(0);
 		}
-		else if (updateLeft) setState(RUN_LEFT);
-		else if (updateRight) setState(RUN_RIGHT);
+		else if (updateLeft) {
+			setState(RUN);
+			setFacing(LEFT);
+		} 
+		else if (updateRight) {
+			setState(RUN);
+			setFacing(RIGHT);
+		}
 		else setState(IDLE);
 	}
 }
@@ -180,49 +208,42 @@ void Player::moveX(bool updateLeft, bool updateRight) {
 
 	switch(state) {
 		case IDLE:
-			horizontalDeceleration(0.75f);
+			horizontalDeceleration(0.71f);
 			break;
 
-		case RUN_LEFT:
-			horizontalMove(-1);
-			break;
-
-		case RUN_RIGHT:
-			horizontalMove(1);
+		case RUN:
+			if(facing == LEFT) horizontalMove(-1);
+			else horizontalMove(1);
 			break;
 
 		case SQUAT:
-			horizontalDeceleration(6.0f/7.0f);
+			horizontalDeceleration(0.75f);
 			break;
 
 		case ATTACK_ONE:
-			horizontalDeceleration(6.0f / 7.0f);
+			horizontalDeceleration(0.85f);
 			break;
 
-		case JUMP_RIGHT: {
+		case JUMP: {
 			float coef(0.98f);
-			if(updateRight) coef = 0.991f;
-			else if(updateLeft) coef = 0.9f;
-			horizontalDeceleration(coef);
+			if(facing == RIGHT) {
+				if(updateRight) coef = 0.991f;
+				else if(updateLeft) coef = 0.9f;
 
+			} else {
+				if(updateLeft) coef = 0.991f;
+				else if(updateRight) coef = 0.9f;
+			}
+			horizontalDeceleration(coef);
 			break;
 		}
 
-		case JUMP_LEFT: {
-			float coef(0.98f);
-			if(updateLeft) coef = 0.991f;
-			else if(updateRight) coef = 0.9f;
-			horizontalDeceleration(coef);
-
-			break;
-		}
-			
 		default:
 			break;
 	}
 
 	//si on est au moins en haut du saut, et qu'on a une faible vitesse alors on peut se donner une impulsion
-	if ((state==JUMP_RIGHT || state==JUMP_LEFT) && xVelocity<0.03f && xVelocity>-0.03f) { 
+	if ((state==JUMP) && xVelocity<0.03f && xVelocity>-0.03f) { 
 		float coef(0.0f);
 		if (updateLeft) coef = -0.25f;
 		else if (updateRight) coef = 0.25f;
@@ -232,25 +253,28 @@ void Player::moveX(bool updateLeft, bool updateRight) {
 
 
 void Player::setState(State newState) {
-	animations[state]->init();
+	// std::cout << state << " - " << facing << std::endl;
+	animations[state][facing]->init();
 
 	//si on etait en train d'attaquer et qu'on arrete alors il y a un cooldown
 	if ((state == ATTACK_ONE || state == ATTACK_TWO || state == ATTACK_THREE) && newState!=ATTACK_ONE && newState!=ATTACK_TWO && newState!=ATTACK_THREE) {
-		cooldown = 600;
-		std::cout << "combo0" << std::endl;
+		cooldown = 100;
 		combo = 0;
 	}
 
 	state = newState;
 }
 
+void Player::setFacing(Facing newFacing) {
+	facing = newFacing;
+}
 
 void Player::doObjectsCollision() {
 	for(int i(0); i<level->getActualRoom()->getObjectsNbr(); i++) {
 		if(isInside(level->getActualRoom()->getInteractiveObject(i))) { //s'il y a collision avec l'hitbox d'un objet
 			//on regarde d'ou vient la collision
-			bool upLeft = level->getActualRoom()->getInteractiveObject(i)->contains(x, y);
-			bool upRight = level->getActualRoom()->getInteractiveObject(i)->contains(x+w, y);
+			//bool upLeft = level->getActualRoom()->getInteractiveObject(i)->contains(x, y);
+			//bool upRight = level->getActualRoom()->getInteractiveObject(i)->contains(x+w, y);
 			bool downLeft = level->getActualRoom()->getInteractiveObject(i)->contains(x, y+h);
 			bool downRight = level->getActualRoom()->getInteractiveObject(i)->contains(x+w, y+h);
 
@@ -266,8 +290,8 @@ void Player::doObjectsCollision() {
 							break;
 						case 2: //si il remonte le booleen associe devient vrai
 							initFallingTime();
-							if(up) setSpeedY(200.0f);
-							else setSpeedY(115.00f);
+							if(up) setSpeedY(sqrt(2*GRAVITY*57));
+							else setSpeedY(sqrt(2*GRAVITY*19));
 							break;
 						default:
 							break;

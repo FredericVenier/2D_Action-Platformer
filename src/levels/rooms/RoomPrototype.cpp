@@ -1,6 +1,6 @@
 #include "RoomPrototype.hpp"
 
-RoomPrototype::RoomPrototype(SDL_Renderer*& renderer) : Room(26,21,11), cloudsNbr(10), cloudTimer(200000), lastCloudY(0.0f) {
+RoomPrototype::RoomPrototype(SDL_Renderer*& renderer) : Room(26,21,11), cloudsNbr(10), cloudTimer(0), lastCloudY(0.0f) {
 	//fond
 	backdropImg = new Image((char*)"res/images/level_prototype/backdrop.png", renderer);
 	backdrop = new Sprite(backdropImg);
@@ -19,8 +19,9 @@ RoomPrototype::RoomPrototype(SDL_Renderer*& renderer) : Room(26,21,11), cloudsNb
 	frontgroundImg = new Image((char*)"res/images/level_prototype/frontground.png", renderer);
 	frontground = new Sprite(frontgroundImg);
 
-	//initialise le seed des nuages
+	//initialise le seed des nuages et leur position
 	std::srand(std::time(NULL));
+	initClouds();
 
 	//on ajoute les hitbox du sol
 	addGround(new Entity(0.0f, 212.0f, 426, 32)); //sol
@@ -48,6 +49,34 @@ RoomPrototype::~RoomPrototype() {
 
 	delete frontgroundImg;
 	delete frontground;
+}
+
+void RoomPrototype::initClouds() {
+	int n(((float)std::rand()/(float)RAND_MAX)*2.0f+2.0f); //on tire un nombre alea entre 2 et 4
+
+	while(n>0) {
+		int r(((float)std::rand()/(float)RAND_MAX)*(float)(cloudsNbr-1)); //on tire un nombre alea entre 0 et le nombre de nuages-1
+		if(clouds[r]->getX() == -clouds[r]->getW()-30) {
+
+			//on tire un nombre alea entre 0.009 et 0.021 pour la vitesse du nuage
+			float speed(((float)std::rand()/(float)RAND_MAX)*0.012f+0.009f);
+
+			//on tire un nombre alea entre -10 et 110 pour la hauteur du nuage
+			float y(((float)std::rand()/(float)RAND_MAX)*120.0f-10.0f);
+			if (y<=lastCloudY-clouds[r]->getH() || y>=lastCloudY+clouds[r]->getH()) {
+				clouds[r]->setY(y);
+				clouds[r]->setSpeed(speed);
+
+				cloudTimer = 0;
+				lastCloudY = y;
+
+				//on tire un nombre alea entre (0 et largeur ecran) - tailleNuage/2 pour sa position en x
+				clouds[r]->setX(((float)std::rand()/(float)RAND_MAX)*640.0f-clouds[r]->getW()/2.0f); 
+
+				n--;
+			}
+		}
+	}
 }
 
 void RoomPrototype::update(int delta) {
@@ -87,12 +116,12 @@ void RoomPrototype::render(SDL_Renderer*& renderer, int width, int height, float
 	backdrop->render(renderer, 0, 0, width, height);
 
 	for(int i(0); i<cloudsNbr; i++) {
-		clouds[i]->render(renderer, (playerX-213)/10, width, height);
+		clouds[i]->render(renderer, width, height);
 	}
 
-	background->render(renderer, (playerX-213.0f)/7.0f, 0, width, height);
+	background->render(renderer, 0, 0, width, height);
 
-	frontground->render(renderer, (playerX-213.0f)/12.0f, 0, width, height);
+	frontground->render(renderer, 0, 0, width, height);
 
 	Room::render(renderer, width, height, playerX);
 }

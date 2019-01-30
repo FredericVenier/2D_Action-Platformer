@@ -23,6 +23,8 @@ public:
 	void update(int delta);
 	void render(SDL_Renderer*& renderer, int width, int height, float playerX);
 
+	void initClouds();
+
 private:
 	Image* backdropImg;
 	Sprite* backdrop;
