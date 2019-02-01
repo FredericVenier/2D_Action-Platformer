@@ -27,6 +27,15 @@ public:
 	void deleteMenu();
 
 private:
+	enum State
+	{
+		START_MENU,
+		PLAY,
+		EOE //End Of Enumeration
+	};
+
+	State state;
+	
 	bool quitting;
 
 	Menu* menu;

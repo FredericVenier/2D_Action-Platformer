@@ -5,6 +5,7 @@
 
 #include "../gui/Animation.hpp"
 #include "../gui/BlockedAnimation.hpp"
+#include "../gui/MirrorAnimation.hpp"
 #include "../InputHandler.hpp"
 #include "MovableEntity.hpp"
 #include "../levels/Level.hpp"

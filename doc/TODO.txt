@@ -1,0 +1,21 @@
+- animation attaque 3
+
+------------------------------------------------------------------------------------------
+
+- platforme traversable
+- ennemi basique
+- jauges de pouvoir
+- jaune : dash vers le haut
+(- jaune : esquive)
+- rouge : tir
+(- rouge : bombe)
+(- vert : super attaque)
+- vert : bouclier
+- background : animations sur plusieur niveaux de profondeur
+
+------------------------------------------------------------------------------------------
+
+on peut traverser les ennemis
+spec_jaune + saut = dash haut
+spec_vert + crouch = bouclier
+spec_rouge + attack = tir à l'ennemi le plus proche

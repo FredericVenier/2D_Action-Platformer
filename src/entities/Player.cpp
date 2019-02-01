@@ -12,27 +12,20 @@ right(false), left(false), rightLeft(false), up(false), down(false), attack(fals
 	animations[JUMP][RIGHT] = new BlockedAnimation(path, 4, 2, 75, 35, 35, renderer);
 	animations[SQUAT][LEFT] = new Animation(path, 6, 5, 300, 35, 35, renderer);
 	animations[SQUAT][RIGHT] = new Animation(path, 6, 5, 300, 35, 35, renderer);
-	animations[ATTACK_ONE][LEFT] = new Animation(path, 7, 6, 100, 70, 35, renderer);
-	animations[ATTACK_TWO][LEFT] = new Animation(path, 8, 6, 100, 70, 35, renderer);
-	animations[ATTACK_THREE][LEFT] = new Animation(path, 7, 6, 100, 70, 35, renderer);
 	animations[ATTACK_ONE][RIGHT] = new Animation(path, 7, 6, 100, 70, 35, renderer);
 	animations[ATTACK_TWO][RIGHT] = new Animation(path, 8, 6, 100, 70, 35, renderer);
 	animations[ATTACK_THREE][RIGHT] = new Animation(path, 7, 6, 100, 70, 35, renderer);
-	// animations[ATTACK_ONE][LEFT] = new MirrorAnimation(animations[ATTACK_ONE][RIGHT]);
-	// animations[ATTACK_TWO][LEFT] = new MirrorAnimation(animations[ATTACK_TWO][RIGHT]);
-	// animations[ATTACK_THREE][LEFT] = new MirrorAnimation(animations[ATTACK_THREE][RIGHT]);
+	animations[ATTACK_ONE][LEFT] = new MirrorAnimation(path, 7, 6, 100, 70, 35, -35, renderer);
+	animations[ATTACK_TWO][LEFT] = new MirrorAnimation(path, 8, 6, 100, 70, 35, -35, renderer);
+	animations[ATTACK_THREE][LEFT] = new MirrorAnimation(path, 7, 6, 100, 70, 35, -35, renderer);
 }
 
 Player::~Player() {
-	for(int i(0); i<7; i++) {
-		// std::cout << "test1" << std::endl;
-		//delete animations[i][1];
-		// std::cout << "test2" << std::endl;
-		//delete animations[i][0];
-		// std::cout << "test3" << std::endl;
+	for(int i(0); i<STATE_EOE; i++) {
+		for(int j(0); j<FACING_EOE; j++) {
+			delete animations[i][j];
+		}
 	}
-
-	std::cout << "test" << std::endl;
 }
 
 
@@ -113,10 +106,8 @@ void Player::updateInput(InputHandler*& inputHandler) {
 
 void Player::updateState(bool updateLeft, bool updateRight) {
 	if(state!=JUMP) { //si on est pas en plein saut on peut changer d'etat selon les touches activees
-		if(!collidingGround) {
+		if(!collidingGround) { //si on ne saute pas et qu'on ne touche plus le sol (chute libre)
 			setState(JUMP);
-			if (xVelocity<0) setFacing(LEFT);
-			else setFacing(RIGHT);
 
 		} else if ((attack || (state==ATTACK_ONE && combo==1) || (state==ATTACK_TWO && combo==2)) && cooldown<=0 && state!=ATTACK_THREE) { //si on attaque
 			switch (combo) {
@@ -253,7 +244,6 @@ void Player::moveX(bool updateLeft, bool updateRight) {
 
 
 void Player::setState(State newState) {
-	// std::cout << state << " - " << facing << std::endl;
 	animations[state][facing]->init();
 
 	//si on etait en train d'attaquer et qu'on arrete alors il y a un cooldown

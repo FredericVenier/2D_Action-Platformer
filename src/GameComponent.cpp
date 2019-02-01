@@ -3,9 +3,6 @@
 GameComponent::GameComponent() : running(false) {
 	game = new Game();
 	inputHandler = new InputHandler();
-
-	window = NULL;
-	renderer = NULL;
 }
 
 GameComponent::~GameComponent() {
@@ -14,7 +11,6 @@ GameComponent::~GameComponent() {
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-	IMG_Quit();
 	SDL_Quit();
 }
 
@@ -41,10 +37,6 @@ void GameComponent::init(const char* title, int xWindow, int yWindow, int width,
 			std::cout << "ERROR: Renderer Creation issue (GameComponent) : " << SDL_GetError() << std::endl; //debug
 		} else {
 			game->setRenderer(renderer);
-		}
-
-		if((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
-			std::cout << "ERROR: IMG_Init issue (GameComponent) : " << IMG_GetError() << std::endl; //debug
 		}
 
 		running = true;

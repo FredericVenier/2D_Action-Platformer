@@ -24,3 +24,12 @@ void Sprite::render(SDL_Renderer*& renderer, float x, float y, int width, int he
 
 	SDL_RenderCopy(renderer, spriteSheet->getTexture(), srcRectangle, &dstRectangle);
 }
+
+void Sprite::render(SDL_Renderer*& renderer, float x, float y, int width, int height, bool flip) {
+	SDL_RendererFlip flipFlag = SDL_FLIP_NONE;
+	if(flip) flipFlag = SDL_FLIP_HORIZONTAL;
+
+	SDL_Rect dstRectangle = {(int)roundf(x*width/426), (int)roundf(y*height/240), (int)roundf(width*srcRectangle->w/426), (int)roundf(height*srcRectangle->h/240)}; //pour une resolution de base en 426x240
+
+	SDL_RenderCopyEx(renderer, spriteSheet->getTexture(), srcRectangle, &dstRectangle, 0, 0, flipFlag);
+}

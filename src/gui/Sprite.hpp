@@ -15,6 +15,7 @@ public:
 	~Sprite();
 
 	void render(SDL_Renderer*& renderer, float x, float y, int width, int height);
+	void render(SDL_Renderer*& renderer, float x, float y, int width, int height, bool flip);
 
 private:
 	Image* spriteSheet;

@@ -17,20 +17,19 @@ public:
 	virtual void init();
 
 	virtual void update(int delta);
-	void render(SDL_Renderer*& renderer, float x, float y, int width, int height);
-
-	int getIterator() const;
-	void setIterator(int i);
+	virtual void render(SDL_Renderer*& renderer, float x, float y, int width, int height);
 
 private:
-	std::vector<Sprite*> sprites;
 	int spritesNbr;
-	int iterator;
 
 	int delay;
 	int fmDelay;
 
 	Image* spriteSheet;
+
+protected:
+	std::vector<Sprite*> sprites;
+	int iterator;
 };
 
 #endif

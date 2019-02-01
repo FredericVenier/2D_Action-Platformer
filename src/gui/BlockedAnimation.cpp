@@ -16,9 +16,9 @@ BlockedAnimation::~BlockedAnimation() {
 void BlockedAnimation::update(int delta) {
 	Animation::update(delta);
 
-	if (firstLoop && Animation::getIterator() != 0) firstLoop = false;
+	if (firstLoop && iterator != 0) firstLoop = false;
 
-	if (!firstLoop && Animation::getIterator() == 0) Animation::setIterator(frame);
+	if (!firstLoop && iterator == 0) iterator=frame;
 }
 
 void BlockedAnimation::init() {
