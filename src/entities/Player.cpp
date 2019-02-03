@@ -110,6 +110,14 @@ void Player::updateState(bool updateLeft, bool updateRight) {
 			setState(JUMP);
 
 		} else if ((attack || (state==ATTACK_ONE && combo==1) || (state==ATTACK_TWO && combo==2)) && cooldown<=0 && state!=ATTACK_THREE) { //si on attaque
+			if(updateLeft && facing != LEFT) {
+				setFacing(LEFT);
+
+			} else if(updateRight && facing != RIGHT) {
+				setFacing(RIGHT);
+
+			}
+			
 			switch (combo) {
 				case 0:
 					setState(ATTACK_ONE);
