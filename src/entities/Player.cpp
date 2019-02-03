@@ -14,10 +14,10 @@ right(false), left(false), rightLeft(false), up(false), down(false), attack(fals
 	animations[SQUAT][RIGHT] = new Animation(path, 6, 5, 300, 35, 35, renderer);
 	animations[ATTACK_ONE][RIGHT] = new Animation(path, 7, 6, 100, 70, 35, renderer);
 	animations[ATTACK_TWO][RIGHT] = new Animation(path, 8, 6, 100, 70, 35, renderer);
-	animations[ATTACK_THREE][RIGHT] = new Animation(path, 7, 6, 100, 70, 35, renderer);
+	animations[ATTACK_THREE][RIGHT] = new Animation(path, 9, 6, 100, 70, 35, renderer);
 	animations[ATTACK_ONE][LEFT] = new MirrorAnimation(path, 7, 6, 100, 70, 35, -35, renderer);
 	animations[ATTACK_TWO][LEFT] = new MirrorAnimation(path, 8, 6, 100, 70, 35, -35, renderer);
-	animations[ATTACK_THREE][LEFT] = new MirrorAnimation(path, 7, 6, 100, 70, 35, -35, renderer);
+	animations[ATTACK_THREE][LEFT] = new MirrorAnimation(path, 9, 6, 100, 70, 35, -35, renderer);
 }
 
 Player::~Player() {
@@ -110,14 +110,14 @@ void Player::updateState(bool updateLeft, bool updateRight) {
 			setState(JUMP);
 
 		} else if ((attack || (state==ATTACK_ONE && combo==1) || (state==ATTACK_TWO && combo==2)) && cooldown<=0 && state!=ATTACK_THREE) { //si on attaque
-			if(updateLeft && facing != LEFT) {
+			if(updateLeft && facing != LEFT) { //si on change de direction entre deux attaques (sans sortir du combo)
 				setFacing(LEFT);
 
 			} else if(updateRight && facing != RIGHT) {
 				setFacing(RIGHT);
 
 			}
-			
+
 			switch (combo) {
 				case 0:
 					setState(ATTACK_ONE);

@@ -1,7 +1,3 @@
-- animation attaque 3
-
-------------------------------------------------------------------------------------------
-
 - platforme traversable
 - ennemi basique
 - jauges de pouvoir
