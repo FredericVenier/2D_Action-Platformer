@@ -60,7 +60,7 @@ void Player::update(int delta, InputHandler*& inputHandler) {
 	moveX(updateLeft, updateRight);
 
 	//on update la position avec collision des objets solides
-	MovableEntity::update(delta, inputHandler, state == JUMP);
+	MovableEntity::update(delta, state == JUMP);
 
 	//on effectue la collision sur les objets interactifs
 	doObjectsCollision();

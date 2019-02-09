@@ -7,6 +7,7 @@
 #include "menus/Menu.hpp"
 #include "menus/TitleMenu.hpp"
 #include "entities/Player.hpp"
+#include "entities/enemies/Moth.hpp"
 #include "levels/Level.hpp"
 #include "levels/rooms/RoomPrototype.hpp"
 
@@ -42,6 +43,8 @@ private:
 	bool menuDeleted;
 
 	Player* player;
+	Moth* moth;
+	// Moth* moth2;
 
 	Level* level;
 

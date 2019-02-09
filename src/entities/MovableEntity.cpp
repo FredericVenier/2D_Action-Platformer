@@ -9,7 +9,7 @@ MovableEntity::~MovableEntity() {
 
 }
 
-void MovableEntity::update(int delta, InputHandler*& inputHandler, bool falling) {
+void MovableEntity::update(int delta, bool falling) {
 	if (falling) fallingTime += delta;
 	else fallingTime = 0;
 

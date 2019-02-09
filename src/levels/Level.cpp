@@ -16,8 +16,8 @@ void Level::update(int delta) {
 	}
 }
 
-void Level::render(SDL_Renderer*& renderer, int width, int height, float playerX) {
-	if(actualRoom < roomsNbr) rooms[actualRoom]->render(renderer, width, height, playerX);
+void Level::render(SDL_Renderer*& renderer, int width, int height) {
+	if(actualRoom < roomsNbr) rooms[actualRoom]->render(renderer, width, height);
 }
 
 void Level::addRoom(Room* room) {

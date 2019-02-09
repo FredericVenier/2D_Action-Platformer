@@ -112,7 +112,7 @@ void RoomPrototype::update(int delta) {
 	Room::update(delta);
 }
 
-void RoomPrototype::render(SDL_Renderer*& renderer, int width, int height, float playerX) {
+void RoomPrototype::render(SDL_Renderer*& renderer, int width, int height) {
 	backdrop->render(renderer, 0, 0, width, height);
 
 	for(int i(0); i<cloudsNbr; i++) {
@@ -123,5 +123,5 @@ void RoomPrototype::render(SDL_Renderer*& renderer, int width, int height, float
 
 	frontground->render(renderer, 0, 0, width, height);
 
-	Room::render(renderer, width, height, playerX);
+	Room::render(renderer, width, height);
 }

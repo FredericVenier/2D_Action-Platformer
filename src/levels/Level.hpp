@@ -14,7 +14,7 @@ public:
 	~Level();
 
 	void update(int delta);
-	void render(SDL_Renderer*& renderer, int width, int height, float playerX);
+	void render(SDL_Renderer*& renderer, int width, int height);
 
 	void addRoom(Room* room);
 

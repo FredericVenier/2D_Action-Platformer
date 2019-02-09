@@ -11,7 +11,7 @@
 class Animation {
 
 public:
-	Animation(char* path, int line, int nSprites, int frameDelay,int w, int h, SDL_Renderer*& renderer);
+	Animation(char* path, int line, int nSprites, int frameDelay, int w, int h, SDL_Renderer*& renderer);
 	virtual ~Animation();
 
 	virtual void init();

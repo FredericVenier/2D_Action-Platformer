@@ -26,7 +26,7 @@ void Room::update(int delta) {
 	}
 }
 
-void Room::render(SDL_Renderer*& renderer, int width, int height, float playerX) {
+void Room::render(SDL_Renderer*& renderer, int width, int height) {
 	for(int i(0); i<objectsNbr; i++) {
 		interactiveObjects[i]->render(renderer, width, height);
 	}

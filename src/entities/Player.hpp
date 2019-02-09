@@ -37,7 +37,7 @@ private:
 	{
 		LEFT,
 		RIGHT,
-		FACING_EOE //En Of Enumeration
+		FACING_EOE //End Of Enumeration
 	};
 
 	State state;
@@ -55,7 +55,7 @@ private:
 	int cooldown;
 	int combo;
 
-	Animation* animations[7][3];
+	Animation* animations[STATE_EOE][FACING_EOE];
 
 	void updateInput(InputHandler*& inputHandler);
 	void updateState(bool updateLeft, bool updateRight);

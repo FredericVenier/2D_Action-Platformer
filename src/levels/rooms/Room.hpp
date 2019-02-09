@@ -16,7 +16,7 @@ public:
 	virtual ~Room();
 
 	virtual void update(int delta);
-	virtual void render(SDL_Renderer*& renderer, int width, int height, float playerX);
+	virtual void render(SDL_Renderer*& renderer, int width, int height);
 
 	void addGround(Entity* newGround);
 	int getGroundsNbr() const;

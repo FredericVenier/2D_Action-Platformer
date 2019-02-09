@@ -19,7 +19,7 @@ public:
 	MovableEntity(float xSpawn, float ySpawn, int width, int height, float entitySpeed, Level*& lvl);
 	virtual ~MovableEntity();
 
-	virtual void update(int delta, InputHandler*& inputHandler, bool falling);
+	virtual void update(int delta, bool falling);
 	virtual void render(SDL_Renderer*& renderer, int width, int height);
 
 private:
